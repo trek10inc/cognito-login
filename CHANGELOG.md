@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.0.1 - 2020-08-01 Bug Fix
+
+- catches `UserNotFoundException`s
+- catches `NotAuthorizedException`s
+- pulls region from user pool ID, not an argument
+-
+
 ## 0.0.0 - 2020-08-01 Initial release
 
 - initial release

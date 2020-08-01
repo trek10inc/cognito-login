@@ -26,3 +26,24 @@ class ValidationException(CognitoLoginException):
         self.message = message
     def __str__(self):
         return 'Validation Exception - {}'.format(self.message)
+
+
+class UserNotFoundException(CognitoLoginException):
+    """A validation exception has occured"""
+    def __init__(self, username=''):
+        super().__init__()
+        self.username = username
+    def __str__(self):
+        return 'User {} not found'.format(self.username)
+
+
+class NotAuthorizedException(CognitoLoginException):
+    """A validation exception has occured"""
+    def __init__(self, message=None):
+        super().__init__()
+        self.message = message
+    def __str__(self):
+        if self.message:
+            return 'Not authorized: {}'.format(self.message)
+        else:
+            return 'Not authorized'

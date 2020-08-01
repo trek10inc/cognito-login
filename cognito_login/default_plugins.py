@@ -4,6 +4,7 @@ import configargparse as argparse
 import warrant
 
 from cognito_login.lib.plugins.hookimpl import hookimpl
+from cognito_login.lib import exceptions
 
 
 @hookimpl(tryfirst=True)
@@ -14,14 +15,6 @@ def add_arguments(parser: argparse.ArgumentParser):
         action='store_true',
         dest='version',
         help='Display the current version of cognito-login',
-    )
-    parser.add_argument(
-        '--region',
-        dest='region',
-        env_var='AWS_REGION',
-        action='store',
-        help='AWS Region',
-        type=str,
     )
     parser.add_argument(
         '--user-pool-id',
@@ -64,11 +57,12 @@ def add_arguments(parser: argparse.ArgumentParser):
 @hookimpl(tryfirst=True)
 def get_jwt(arguments: dict) -> int:
     """Do the work"""
+    region = arguments.user_pool_id.split('_')[0]
     user = warrant.Cognito(
         user_pool_id=arguments.user_pool_id,
         client_id=arguments.app_client_id,
         username=arguments.username,
-        user_pool_region=arguments.region,
+        user_pool_region=region,
     )
     try:
         user.authenticate(password=arguments.password)
@@ -76,10 +70,14 @@ def get_jwt(arguments: dict) -> int:
         new_password = input('ForceChangePasswordException raised, please enter a new password\n>')
         user.new_password_challenge(arguments.password, new_password)
     except botocore.exceptions.ClientError as err:
-        if err.response.get('Error', {}).get('Code') != 'PasswordResetRequiredException':
-            raise
-        reset_code = input('PasswordResetRequiredException raised, please enter your password reset code\n>')
-        new_password = input('Please enter a new password\n>')
-        user.confirm_forgot_password(reset_code, new_password)
-        user.authenticate(password=new_password)
+        if err.response.get('Error', {}).get('Code') == 'PasswordResetRequiredException':
+            reset_code = input('PasswordResetRequiredException raised, please enter your password reset code\n>')
+            new_password = input('Please enter a new password\n>')
+            user.confirm_forgot_password(reset_code, new_password)
+            user.authenticate(password=new_password)
+        if err.response.get('Error', {}).get('Code') == 'UserNotFoundException':
+            raise exceptions.UserNotFoundException(arguments.username)
+        if err.response.get('Error', {}).get('Code') == 'NotAuthorizedException':
+            raise exceptions.NotAuthorizedException(err.response.get('message'))
+        raise
     return user.id_token
