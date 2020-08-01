@@ -3,10 +3,10 @@ dependencies:
 
 lint:
 	pipenv run pylint cognito_login
-build:
-	python setup.py sdist
-deploy:
-	twine upload dist/*
+build: setup.py cognito_login
+	pipenv run python setup.py sdist
+deploy: build
+	pipenv run twine upload dist/*
 
 clean:
 	pipenv --rm
