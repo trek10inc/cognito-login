@@ -1,11 +1,14 @@
 # Changelog
 
+## 0.0.2 - 2020-08-01 Bug Fix
+
+- Allows `-v`, `--version` arguments to bypass other argument requirements
+
 ## 0.0.1 - 2020-08-01 Bug Fix
 
 - catches `UserNotFoundException`s
 - catches `NotAuthorizedException`s
 - pulls region from user pool ID, not an argument
--
 
 ## 0.0.0 - 2020-08-01 Initial release
 

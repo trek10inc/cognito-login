@@ -5,6 +5,7 @@ import warrant
 
 from cognito_login.lib.plugins.hookimpl import hookimpl
 from cognito_login.lib import exceptions
+from cognito_login.__data__ import VERSION
 
 
 @hookimpl(tryfirst=True)
@@ -12,8 +13,8 @@ def add_arguments(parser: argparse.ArgumentParser):
     """Add default arguments"""
     parser.add_argument(
         '-v', '--version',
-        action='store_true',
-        dest='version',
+        action='version',
+        version=VERSION,
         help='Display the current version of cognito-login',
     )
     parser.add_argument(
