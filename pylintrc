@@ -1,0 +1,9 @@
+[MASTER]
+load-plugins=
+  pylint_quotes,
+
+[MESSAGES CONTROL]
+disable=
+
+[FORMAT]
+max-line-length=160

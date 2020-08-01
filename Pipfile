@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+twine = "*"
+pylint = "*"
+pylint-quotes = "*"
+pytest = "*"
+pytest-cov = "*"
+
+[packages]
+cognito_login = {editable = true,path = "."}
+warrant = "*"
+pluggy = "*"
+configargparse = "*"
+boto3 = "*"
+
+[requires]
+python_version = "3.8"
