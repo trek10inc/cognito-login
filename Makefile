@@ -10,3 +10,10 @@ deploy: build
 
 clean:
 	pipenv --rm
+
+test:
+	pytest test --cov=cognito_login --cov-report term
+test-html:
+	pytest test --cov=cognito_login --cov-report html:coverage/html
+test-only:
+	pytest test
