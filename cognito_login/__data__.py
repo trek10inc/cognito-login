@@ -1,5 +1,5 @@
 """cognito-login"""
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 
 NAME = 'cognito-login'
 AUTHOR = 'Trek10, Inc'

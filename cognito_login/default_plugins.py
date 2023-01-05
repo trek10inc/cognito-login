@@ -56,7 +56,7 @@ def add_arguments(parser: argparse.ArgumentParser):
 
 
 @hookimpl(tryfirst=True)
-def get_jwt(arguments: dict) -> int:
+def get_jwt(arguments: dict) -> dict:
     """Do the work"""
     region = arguments.user_pool_id.split('_')[0]
     user = warrant.Cognito(
@@ -81,4 +81,9 @@ def get_jwt(arguments: dict) -> int:
         if err.response.get('Error', {}).get('Code') == 'NotAuthorizedException':
             raise exceptions.NotAuthorizedException(err.response.get('message'))
         raise
-    return user.id_token
+    return {
+        'id_token': user.id_token,
+        'refresh_token': user.refresh_token,
+        'access_token': user.access_token,
+        'token_type': user.token_type,
+    }
